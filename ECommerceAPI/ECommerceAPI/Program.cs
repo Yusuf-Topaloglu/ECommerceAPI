@@ -1,10 +1,13 @@
 using ECommerceAPI.Data;
+using ECommerceAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ECommerceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<CartService>();
 
 // Add services to the container.
 
