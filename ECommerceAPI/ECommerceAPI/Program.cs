@@ -8,6 +8,7 @@ builder.Services.AddDbContext<ECommerceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<ProductService>();
 
 // Add services to the container.
 
