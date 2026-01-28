@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ECommerceAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/cart")]
     public class TestCartController : ControllerBase
     {
         private readonly CartService _cartService;

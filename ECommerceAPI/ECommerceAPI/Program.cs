@@ -9,6 +9,7 @@ builder.Services.AddDbContext<ECommerceContext>(options =>
 
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<CategoryService>();
 
 // Add services to the container.
 

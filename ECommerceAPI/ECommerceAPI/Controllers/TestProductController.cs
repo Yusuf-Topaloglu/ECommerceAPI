@@ -8,7 +8,7 @@ using Microsoft.Identity.Client;
 namespace ECommerceAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/products")]
     public class TestProductController :ControllerBase
     {
         private readonly ProductService _productService;
@@ -134,7 +134,7 @@ namespace ECommerceAPI.Controllers
             var total = _productService.CalculateTotal(price, discount, tax);
             return Ok(total);
         }
-        [HttpPost]
+        [HttpPost("validate")]
         public IActionResult ValidateProduct(Product product)
         {
             if (!_productService.IsValid(product))
