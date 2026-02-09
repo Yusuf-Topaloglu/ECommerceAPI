@@ -17,6 +17,11 @@ namespace ECommerceAPI.Controllers
             _categoryService = categoryService;
         }
 
+        /// <summary>
+        /// Tüm kategoriler listelendi
+        /// </summary>
+        
+
         [HttpGet]
         public async Task<IActionResult> GetAllCategory()
         {
