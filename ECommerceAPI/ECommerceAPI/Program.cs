@@ -1,7 +1,9 @@
 using ECommerceAPI.Data;
 using ECommerceAPI.Filters;
 using ECommerceAPI.Middlewares;
-using ECommerceAPI.Services;
+using ECommerceAPI.Repositories;
+using ECommerceAPI.Services.Abstract;
+using ECommerceAPI.Services.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -10,10 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ECommerceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CategoryService>();
-
+builder.Services.AddScoped<IProductService , ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICartService, CartService>();
 // Add services to the container.
 
 builder.Services.AddControllers(options =>

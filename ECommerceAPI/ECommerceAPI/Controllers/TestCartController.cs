@@ -1,7 +1,8 @@
 ﻿using ECommerceAPI.Models;
 using ECommerceAPI.Models.Dtos.Cart;
 using ECommerceAPI.Models.Dtos.Category;
-using ECommerceAPI.Services;
+using ECommerceAPI.Services.Abstract;
+using ECommerceAPI.Services.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerceAPI.Controllers
@@ -10,9 +11,9 @@ namespace ECommerceAPI.Controllers
     [Route("api/cart")]
     public class TestCartController : ControllerBase
     {
-        private readonly CartService _cartService;
+        private readonly ICartService _cartService;
 
-        public TestCartController(CartService cartService)
+        public TestCartController(ICartService cartService)
         {
             _cartService = cartService;
         }
@@ -27,10 +28,6 @@ namespace ECommerceAPI.Controllers
         public async Task<IActionResult> GetByCardAsync(int id)
         {
             var existingCart = await _cartService.GetCartAsync(id);
-
-            if (existingCart == null)
-                return NotFound();
-
 
             return Ok(existingCart);
         }
@@ -52,12 +49,11 @@ namespace ECommerceAPI.Controllers
             return Ok(response);
             
         }
-        [HttpPut("{cartItem}")]
-        public async Task<IActionResult> UpdateCartAsync(CartItem cartItem)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCartAsync(int id,CartItemDto cartItemDto)
         {
-            var updateCart= await _cartService.UpdateCartAsync(cartItem);
-            if (!updateCart)
-                return NotFound();
+            var updateCart= await _cartService.UpdateCartAsync(id, cartItemDto);
+            
 
             return Ok();
 
@@ -66,8 +62,7 @@ namespace ECommerceAPI.Controllers
         public async Task<IActionResult> DeleteCartAsync(int id)
         {
             var deleteCart = await _cartService.RemoveFromCartAsync(id);
-            if (!deleteCart)
-                return NotFound();
+            
 
             return Ok();
 

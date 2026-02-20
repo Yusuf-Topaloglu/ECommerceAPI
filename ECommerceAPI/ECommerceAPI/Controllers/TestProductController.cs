@@ -1,7 +1,8 @@
 ﻿using ECommerceAPI.Models;
 using ECommerceAPI.Models.Dtos.Product;
 using ECommerceAPI.Models.Responses;
-using ECommerceAPI.Services;
+using ECommerceAPI.Services.Abstract;
+using ECommerceAPI.Services.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 
@@ -9,19 +10,19 @@ namespace ECommerceAPI.Controllers
 {
     [ApiController]
     [Route("api/products")]
-    public class TestProductController :ControllerBase
+    public class TestProductController : ControllerBase
     {
-        private readonly ProductService _productService;
+        private readonly IProductService _productService;
 
-        public TestProductController(ProductService productService)
+        public TestProductController(IProductService productService)
         {
-                _productService = productService;
+            _productService = productService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var hepsiniGetir= await _productService.GetAllProductAsync();
+            var hepsiniGetir = await _productService.GetAllProductAsync();
             return Ok(hepsiniGetir);
         }
 
@@ -30,15 +31,7 @@ namespace ECommerceAPI.Controllers
         {
             var product = await _productService.GetByIdAsync(id);
 
-            if (product == null)
-                return NotFound(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Ürün bulunamadı",
-                    Data = null
-                });
-
-            var dto = new ProductDto
+            var dto = new ProductDto // Şimdilik mapper olmadığından manuel map edildiği çünkü controller dto döner 
             {
                 Name = product.Name,
                 Price = product.Price,
@@ -56,20 +49,8 @@ namespace ECommerceAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProduct(CreateProductDto productDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-
-            var product = new Product
-            {
-                Name = productDto.Name,
-                Price=productDto.Price,
-                Stock=productDto.Stock
-            };
-
-           await _productService.CreateProductAsync(product);
+            await _productService.CreateProductAsync(productDto);
 
             return Ok(new ApiResponse<object>
             {
@@ -80,19 +61,10 @@ namespace ECommerceAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id ,UpdateProductDto dto)
+        public async Task<IActionResult> UpdateProduct(int id, UpdateProductDto dto)
         {
-         
-            var existingProduct = await _productService.UpdateProductAsync(id,dto);
-            if(!existingProduct)
-                return NotFound(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Ürün Güncellenmedi",
-                    Data =null
 
-
-                    });
+            var existingProduct = await _productService.UpdateProductAsync(id, dto);
 
             var responseDto = new ProductDto
             {
@@ -112,59 +84,8 @@ namespace ECommerceAPI.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var deleteProduct = await _productService.DeleteProductAsync(id);
-            if (!deleteProduct)
-                return NotFound(new ApiResponse<object>
-                {
 
-                    Success = false,
-                    Message="Ürün silinemedi",
-                    Data=null
-                });
-
-            return Ok(new ApiResponse<object>
-            {
-                Success=true,
-                Message="Ürün silindi",
-                Data=null
-            });
-        }
-        [HttpGet("calculate-total")]
-        public IActionResult CalculateTotal(decimal price, decimal discount, decimal tax)
-        {
-            var total = _productService.CalculateTotal(price, discount, tax);
-            return Ok(total);
-        }
-        [HttpPost("validate")]
-        public IActionResult ValidateProduct(Product product)
-        {
-            if (!_productService.IsValid(product))
-                return BadRequest("Ürün bilgileri hatalı");
-
-            return Ok("Ürün geçerli");
-        }
-
-        [HttpPost("Stok-Kontrol")]
-        public IActionResult HasEnough(int productId, int requestedQuantity)
-        {
-            var control = _productService.HasEnoughStock(productId,requestedQuantity);
-            if (!control)
-            {
-                return BadRequest("Ürün stokları uyuşmamaktadır.");
-            }
-          
-            return Ok("Stoklar yeterli");
-        }
-
-        [HttpPut("Decrease-stock")]
-        public IActionResult Decrase(int productId, int quantity)
-        {
-            var existing= _productService.DecreaseStock(productId,quantity);
-            if(!existing)
-            {
-                return BadRequest("Stok düşürülemedi");
-            }
-            return Ok("stok Başarıyla güncellendi");
+            return Ok();
         }
     }
-
 }

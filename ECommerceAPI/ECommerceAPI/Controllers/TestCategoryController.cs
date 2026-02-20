@@ -1,8 +1,9 @@
 ﻿using ECommerceAPI.Models;
 using ECommerceAPI.Models.Responses;
-using ECommerceAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using ECommerceAPI.Models.Dtos.Category;
+using ECommerceAPI.Services.Concrete;
+using ECommerceAPI.Services.Abstract;
 
 namespace ECommerceAPI.Controllers
 {
@@ -10,9 +11,9 @@ namespace ECommerceAPI.Controllers
     [Route("api/categories")]
     public class TestCategoryController : ControllerBase
     {
-        private readonly CategoryService _categoryService;
+        private readonly ICategoryService _categoryService;
 
-        public TestCategoryController(CategoryService categoryService)
+        public TestCategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
@@ -47,13 +48,7 @@ namespace ECommerceAPI.Controllers
         {
             var category = await _categoryService.GetByIdCategoryAsync(id);
 
-            if (category == null)
-                return NotFound(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Kategori bulunamadı",
-                    Data = null
-                });
+
 
             var dto = new CategoryDto
             {
@@ -70,21 +65,14 @@ namespace ECommerceAPI.Controllers
         }
         [HttpPost]
 
-        public async Task<IActionResult> CreateCategoryAsync(CreateCategoryDto createCategoryDto)
+        public async Task<IActionResult> CreateCategory(CreateCategoryDto createCategoryDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+           
 
 
-            var create = new Category
-            {
-                Name = createCategoryDto.Name,
-                Description = createCategoryDto.Description
-            };
+           
 
-            await _categoryService.CreateCategory(createCategoryDto);
+            await _categoryService.CreateCategoryAsync(createCategoryDto);
 
             return Ok(new ApiResponse<object>
             {
@@ -100,8 +88,7 @@ namespace ECommerceAPI.Controllers
         {
             var existingCategory = await _categoryService.UpdateCategoryAsync(id, updateCategoryDto);
 
-            if (!existingCategory)
-                return NotFound();
+           
 
             var responseDto= new CategoryDto
             { 
@@ -122,11 +109,6 @@ namespace ECommerceAPI.Controllers
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var deleted= await _categoryService.DeleteCategoryAsync(id);
-
-            if (!deleted)
-            {
-                return NotFound();
-            }
 
             return Ok();
         }

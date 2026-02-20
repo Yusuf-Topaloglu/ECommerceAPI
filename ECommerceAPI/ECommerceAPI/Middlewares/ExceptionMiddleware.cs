@@ -1,31 +1,30 @@
 ﻿using ECommerceAPI.Exceptions;
+using ECommerceAPI.Models.Responses;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+
 namespace ECommerceAPI.Middlewares
 {
     public class ExceptionMiddleware
     {
-        private readonly RequestDelegate _requestDelegate;
+        private readonly RequestDelegate _next;
 
-        public ExceptionMiddleware(RequestDelegate requestDelegate)
+        public ExceptionMiddleware(RequestDelegate next)
         {
-            _requestDelegate = requestDelegate;
+            _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext context)
         {
-
-
             try
             {
-                await _requestDelegate(httpContext); 
+                await _next(context);
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
+                context.Response.ContentType = "application/json";
 
-                httpContext.Response.ContentType = "application/json";
-
-                int statusCode = 500; 
+                int statusCode = 500;
                 string message = "Beklenmeyen bir hata oluştu";
 
                 if (ex is BaseException baseException)
@@ -34,19 +33,14 @@ namespace ECommerceAPI.Middlewares
                     message = baseException.Message;
                 }
 
-                httpContext.Response.StatusCode = statusCode;
+                context.Response.StatusCode = statusCode;
 
-                var response = new
-                {
-                    success = false,
-                    message
-                };
+                var errorResponse = new ErrorResponse(message);
 
-                await httpContext.Response.WriteAsync(
-                    JsonSerializer.Serialize(response)
+                await context.Response.WriteAsync(
+                    JsonSerializer.Serialize(errorResponse)
                 );
             }
         }
-
     }
 }
