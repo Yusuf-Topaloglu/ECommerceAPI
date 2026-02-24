@@ -1,5 +1,6 @@
 ﻿using ECommerceAPI.Data;
 using ECommerceAPI.Exceptions;
+using ECommerceAPI.Mappings;
 using ECommerceAPI.Models;
 using ECommerceAPI.Models.Dtos.Category;
 using ECommerceAPI.Models.Dtos.Product;
@@ -40,11 +41,7 @@ namespace ECommerceAPI.Services.Concrete
         {
             ValidateCategory(dto);
 
-            var category = new Category  //automapper olmadığından manuel map oluşturuldu
-            {
-                Name = dto.Name,
-                Description = dto.Description
-            };
+            var category = CategoryMapper.ToEntity(dto);
            await _repository.AddAsync(category);
             await _repository.SaveAsync();
 
@@ -57,8 +54,7 @@ namespace ECommerceAPI.Services.Concrete
             if (existingCategory == null)
                 throw new ValidationException("Kategori bulunmamaktadır");
             if(existingCategory!=null)
-            existingCategory.Name = dto.Name;
-            existingCategory.Description = dto.Description;
+            CategoryMapper.UpdateEntity(existingCategory, dto);
 
             await _repository.SaveAsync();
             return true;

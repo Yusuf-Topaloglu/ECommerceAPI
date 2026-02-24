@@ -1,5 +1,6 @@
 ﻿using ECommerceAPI.Data;
 using ECommerceAPI.Exceptions;
+using ECommerceAPI.Mappings;
 using ECommerceAPI.Models;
 using ECommerceAPI.Models.Dtos.Product;
 using ECommerceAPI.Repositories;
@@ -44,12 +45,7 @@ namespace ECommerceAPI.Services.Concrete
             ValidateProduct(dto);
 
 
-            var product = new Product
-            {
-                Name= dto.Name,
-                Price= dto.Price,
-                Stock= dto.Stock
-            };
+         var product=ProductMapper.ToEntity(dto);
 
            await _repository.AddAsync(product);
             await _repository.SaveAsync();
@@ -78,12 +74,12 @@ namespace ECommerceAPI.Services.Concrete
 
             if (existingProduct == null)
                 throw new ValidationException("Böyle bir ürün bulunmamaktadır.");
-                existingProduct.Name = dto.Name;
-                existingProduct.Price = dto.Price;
-                existingProduct.Stock = dto.Stock;
 
 
             CheckStock(dto.Stock);
+            ProductMapper.UpdateEntity(existingProduct, dto);
+
+
 
             await _repository.SaveAsync();
             return true;

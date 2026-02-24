@@ -1,5 +1,6 @@
 ﻿using ECommerceAPI.Data;
 using ECommerceAPI.Exceptions;
+using ECommerceAPI.Mappings;
 using ECommerceAPI.Models;
 using ECommerceAPI.Models.Dtos.Category;
 using ECommerceAPI.Repositories;
@@ -43,12 +44,7 @@ namespace ECommerceAPI.Services.Concrete
             }
             else
             {
-                cartItem = new CartItem
-                {
-                    ProductId = productId,
-                    Quantity = quantity,
-                    UserId = userId
-                };
+               cartItem = CartMapper.ToEntity(productId, quantity, userId);
 
                await _repository.AddAsync (cartItem);
             }
@@ -65,10 +61,9 @@ namespace ECommerceAPI.Services.Concrete
             if (existingCart == null)
                 throw new NotFoundException("Sepette böyle bir ürün bulunmamaktadır.");
 
-            existingCart.Quantity = cartItemDto.Quantity;
-            existingCart.ProductId = cartItemDto.ProductId;
 
             ValidateCart(cartItemDto);
+            CartMapper.UpdateEntity(existingCart, cartItemDto);
 
             await _repository.SaveAsync();
             return true;
