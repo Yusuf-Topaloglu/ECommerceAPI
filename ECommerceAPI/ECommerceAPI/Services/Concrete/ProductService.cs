@@ -8,6 +8,7 @@ using ECommerceAPI.Services.Abstract;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Eventing.Reader;
@@ -17,18 +18,24 @@ namespace ECommerceAPI.Services.Concrete
     public class ProductService : IProductService
     {
        private readonly IRepository<Product> _repository;
+       private readonly ILogger<ProductService> _logger;
 
-        public ProductService(IRepository<Product> repository)
+        public ProductService(IRepository<Product> repository,ILogger<ProductService> logger)
         {
             _repository=repository;
+            _logger=logger;
 
         }
 
         public async Task<List<Product>> GetAllProductAsync()
 
         {
-            return await _repository.GetAllAsync();
+            _logger.LogInformation("Fetching all products from repository ");
+            var products= await _repository.GetAllAsync();
 
+            _logger.LogInformation("Retrieved {Count} products from database", products.Count);
+
+            return products;
         }
 
         public async Task<Product?> GetByIdAsync(int id)
@@ -43,11 +50,11 @@ namespace ECommerceAPI.Services.Concrete
         public async Task<int> CreateProductAsync(CreateProductDto dto)
         {
             ValidateProduct(dto);
+            _logger.LogInformation("New produtcs builder ");
 
-
-         var product=ProductMapper.ToEntity(dto);
-
-           await _repository.AddAsync(product);
+            var product=ProductMapper.ToEntity(dto);
+            _logger.LogInformation("New produtcs builder from succes");
+            await _repository.AddAsync(product);
             await _repository.SaveAsync();
 
             return product.Id;

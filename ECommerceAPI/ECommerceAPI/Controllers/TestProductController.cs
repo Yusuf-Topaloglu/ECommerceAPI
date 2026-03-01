@@ -13,16 +13,20 @@ namespace ECommerceAPI.Controllers
     public class TestProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly ILogger<TestProductController> _logger;
 
-        public TestProductController(IProductService productService)
+        public TestProductController(IProductService productService,ILogger<TestProductController> logger)
         {
             _productService = productService;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            _logger.LogInformation("GetAll Products request received");
             var hepsiniGetir = await _productService.GetAllProductAsync();
+            _logger.LogInformation("GetAll Products completed. Count:{Count}", hepsiniGetir.Count);
             return Ok(hepsiniGetir);
         }
 
@@ -50,7 +54,10 @@ namespace ECommerceAPI.Controllers
         public async Task<IActionResult> AddProduct(CreateProductDto productDto)
         {
 
+            _logger.LogInformation("Created products from received");
             await _productService.CreateProductAsync(productDto);
+            _logger.LogInformation("Created product from succes");
+
 
             return Ok(new ApiResponse<object>
             {
