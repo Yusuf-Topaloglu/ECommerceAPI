@@ -1,6 +1,6 @@
-﻿using ECommerceAPI.Models;
-using ECommerceAPI.Models.Dtos.Category;
+﻿using ECommerceAPI.Models.Dtos.Category;
 using ECommerceAPI.Models.Dtos.Product;
+using ECommerceAPI.Models.Entities;
 
 namespace ECommerceAPI.Mappings
 {

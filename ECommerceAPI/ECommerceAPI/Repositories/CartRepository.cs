@@ -1,5 +1,5 @@
 ﻿using ECommerceAPI.Data;
-using ECommerceAPI.Models;
+using ECommerceAPI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceAPI.Repositories
@@ -21,6 +21,14 @@ namespace ECommerceAPI.Repositories
                    x.UserId == userId
                );
 
+        }
+
+        public async Task<List<CartItem>> GetByUserIdAsync(string userId)
+        {
+            return await _context.CartItems
+                .Include(x => x.Product)
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
         }
     }
 }

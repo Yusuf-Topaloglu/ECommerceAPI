@@ -1,4 +1,4 @@
-﻿namespace ECommerceAPI.Models
+﻿namespace ECommerceAPI.Models.Entities
 {
     public class CartItem
     {

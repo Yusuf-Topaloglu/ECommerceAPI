@@ -1,9 +1,9 @@
 ﻿using ECommerceAPI.Data;
 using ECommerceAPI.Exceptions;
 using ECommerceAPI.Mappings;
-using ECommerceAPI.Models;
 using ECommerceAPI.Models.Dtos.Category;
 using ECommerceAPI.Models.Dtos.Product;
+using ECommerceAPI.Models.Entities;
 using ECommerceAPI.Repositories;
 using ECommerceAPI.Services.Abstract;
 using Microsoft.AspNetCore.Http.HttpResults;

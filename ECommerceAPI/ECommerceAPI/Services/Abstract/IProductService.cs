@@ -1,5 +1,5 @@
-﻿using ECommerceAPI.Models;
-using ECommerceAPI.Models.Dtos.Product;
+﻿using ECommerceAPI.Models.Dtos.Product;
+using ECommerceAPI.Models.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ECommerceAPI.Services.Abstract

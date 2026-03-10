@@ -1,5 +1,5 @@
-﻿using ECommerceAPI.Models;
-using ECommerceAPI.Models.Dtos.Category;
+﻿using ECommerceAPI.Models.Dtos.Category;
+using ECommerceAPI.Models.Entities;
 
 namespace ECommerceAPI.Services.Abstract
 {
@@ -14,7 +14,6 @@ namespace ECommerceAPI.Services.Abstract
         Task<bool> UpdateCartAsync(int id, CartItemDto cartItemDto);
 
         Task<bool> RemoveFromCartAsync(int id);
-
-
+        Task<decimal> GetCartTotalAsync(string userId);
     }
 }

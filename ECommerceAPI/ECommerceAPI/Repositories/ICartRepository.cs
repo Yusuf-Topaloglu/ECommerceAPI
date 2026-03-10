@@ -1,5 +1,5 @@
 ﻿using ECommerceAPI.Data;
-using ECommerceAPI.Models;
+using ECommerceAPI.Models.Entities;
 
 namespace ECommerceAPI.Repositories
 {
@@ -8,5 +8,7 @@ namespace ECommerceAPI.Repositories
        
 
         Task<CartItem?> GetByProductAndUserAsync(int productId, string userId);
+
+        Task<List<CartItem>> GetByUserIdAsync(string userId);
     }
 }

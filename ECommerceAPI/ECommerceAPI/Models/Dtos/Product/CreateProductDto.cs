@@ -12,6 +12,8 @@ namespace ECommerceAPI.Models.Dtos.Product
         [Range(0.01,double.MaxValue,ErrorMessage ="Girilen sayı 0 dan büyük olmalıdır")]
         public decimal Price { get; set; }
         
+        public int CategoryId { get; set; }
+
         public int Stock { get; set; }
     }
 }

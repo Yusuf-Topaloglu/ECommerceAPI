@@ -37,7 +37,7 @@ namespace ECommerceAPI.Controllers
 
             string userId = "test-user";
 
-            var cartItem = await _cartService.AddToCartAsync(dto.ProductId,dto.Quantity, userId);
+            var cartItem = await _cartService.AddToCartAsync(dto.ProductId, dto.Quantity, userId);
 
             var response = new CartItemDto
             {
@@ -47,13 +47,13 @@ namespace ECommerceAPI.Controllers
                 ProductPrice = cartItem.Product.Price
             };
             return Ok(response);
-            
+
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCartAsync(int id,CartItemDto cartItemDto)
+        public async Task<IActionResult> UpdateCartAsync(int id, CartItemDto cartItemDto)
         {
-            var updateCart= await _cartService.UpdateCartAsync(id, cartItemDto);
-            
+            var updateCart = await _cartService.UpdateCartAsync(id, cartItemDto);
+
 
             return Ok();
 
@@ -62,10 +62,18 @@ namespace ECommerceAPI.Controllers
         public async Task<IActionResult> DeleteCartAsync(int id)
         {
             var deleteCart = await _cartService.RemoveFromCartAsync(id);
-            
+
 
             return Ok();
 
+        }
+
+        [HttpGet("total")]
+        public async Task<IActionResult> GetCartTotal()
+        {
+            string userId = "test-user"; 
+            var total = await _cartService.GetCartTotalAsync(userId);
+            return Ok(total);
         }
     }
 

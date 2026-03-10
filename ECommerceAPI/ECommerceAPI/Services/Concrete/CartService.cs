@@ -1,8 +1,8 @@
 ﻿using ECommerceAPI.Data;
 using ECommerceAPI.Exceptions;
 using ECommerceAPI.Mappings;
-using ECommerceAPI.Models;
 using ECommerceAPI.Models.Dtos.Category;
+using ECommerceAPI.Models.Entities;
 using ECommerceAPI.Repositories;
 using ECommerceAPI.Services.Abstract;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -74,11 +74,20 @@ namespace ECommerceAPI.Services.Concrete
             var existingCart = await _repository.GetByIdAsync(id);
             if (existingCart == null)
                 throw new NotFoundException("Sepette böyle bir ürün bulunmamaktadır.");
-
             _repository.Delete(existingCart);
             await _repository.SaveAsync();
             return true;
 
+        }
+
+        public async Task<decimal> GetCartTotalAsync(string userId)
+        {
+            var cartItems = await _cartRepository.GetByUserIdAsync(userId);
+
+            if (cartItems == null || !cartItems.Any())
+                return 0;
+
+            return cartItems.Sum(x => x.Quantity * x.Product.Price);
         }
 
         private void ValidateCart(CartItemDto cartItemDto)
@@ -89,5 +98,7 @@ namespace ECommerceAPI.Services.Concrete
             }
 
         }
+
+
     }
 }

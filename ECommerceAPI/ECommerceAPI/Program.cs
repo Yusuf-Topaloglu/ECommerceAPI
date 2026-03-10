@@ -22,6 +22,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 // Add services to the container.
 
+builder.Logging.AddConsole();
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidateModelFilter>();

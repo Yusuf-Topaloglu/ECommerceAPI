@@ -25,6 +25,12 @@ namespace ECommerceAPI.Middlewares
             }
             catch (Exception ex)
             {
+                Console.WriteLine("========== HATA ==========");
+                Console.WriteLine($"MESAJ: {ex.Message}");
+                if (ex.InnerException != null)
+                    Console.WriteLine($"INNER: {ex.InnerException.Message}");
+                Console.WriteLine("==========================");
+
                 _logger.LogError(ex, "Unhandled exception occured, Path {Path}", context.Request.Path);
                 context.Response.ContentType = "application/json";
 
