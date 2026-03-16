@@ -17,9 +17,12 @@ builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<CartService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<OrderServices>();
+builder.Services.AddScoped<IOrderServices, OrderServices>();
 builder.Services.AddScoped<IProductService , ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 // Add services to the container.
 
 builder.Logging.AddConsole();

@@ -1,10 +1,12 @@
-﻿namespace ECommerceAPI.Models.Entities
+﻿using ECommerceAPI.Models.Enums;
+
+namespace ECommerceAPI.Models.Entities
 {
     public class Order
     {
         public int Id { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         public DateTime OrderDate { get; set; }
 
