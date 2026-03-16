@@ -72,14 +72,29 @@ namespace ECommerceAPI.Services.Concrete
         }
 
        
-        public Task<List<Order>> GetUserOrdersAsync(string userId)
+        public async Task<List<Order>> GetUserOrdersAsync(string userId)
         {
-            throw new NotImplementedException();
+            var orders = await _orderRepository.GetByUserIdAsync(userId);
+
+            if (orders == null || !orders.Any())
+            {
+                return new List<Order>();
+            }
+            return orders;
         }
 
-        public Task<bool> UpdateOrderStatusAsync(int id, OrderStatus newStatus)
+        public async Task<bool> UpdateOrderStatusAsync(int id, OrderStatus newStatus)
         {
-            throw new NotImplementedException();
+            var orderUpdate = await _orderRepository.GetByIdAsync(id);
+
+            if (orderUpdate==null)
+            {
+                throw new NotFoundException("Sipariş bulunamadı");
+            }
+            orderUpdate.Status= newStatus;
+            await _orderRepository.SaveAsync();
+            return true;
+
         }
     }
 }
